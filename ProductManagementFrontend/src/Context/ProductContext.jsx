@@ -9,7 +9,19 @@ export const ProductProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
 
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalProductId, setModalProductId] = useState(null);
 
+    const openModal = (id = null) => {
+        setModalProductId(id);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalProductId(null);
+    };
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -66,6 +78,10 @@ export const ProductProvider = ({ children }) => {
                 error,
                 searchTerm,
                 setSearchTerm,
+                isModalOpen,
+                modalProductId,
+                openModal,
+                closeModal,
             }}
         >
             {children}

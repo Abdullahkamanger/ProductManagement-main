@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, PlusCircle, Package } from 'lucide-react';
 import SearchBar from './SearchBar';
+import { ProductContext } from '../Context/ProductContext.jsx';
 
 const Navbar = () => {
+  const { openModal } = React.useContext(ProductContext);
+
   return (
     <nav className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -23,13 +26,13 @@ const Navbar = () => {
 
         {/* Navigation Actions */}
         <div className="flex items-center gap-2">
-          <Link 
-            to="/add" 
+          <button 
+            onClick={() => openModal()} 
             className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
           >
             <PlusCircle className="w-4 h-4" />
             <span className="hidden md:block">New Product</span>
-          </Link>
+          </button>
           
           <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors">
             <LayoutDashboard className="w-5 h-5" />

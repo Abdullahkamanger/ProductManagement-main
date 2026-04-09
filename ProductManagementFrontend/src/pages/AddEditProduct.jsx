@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { ProductContext } from '../Context/ProductContext.jsx';
-import { Save, ArrowLeft, PackagePlus, DollarSign, Tag, ImageIcon, CheckCircle2 } from 'lucide-react';
+import { Save, PackagePlus, DollarSign, Tag, ImageIcon, X } from 'lucide-react';
 
 const AddEditProduct = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { products, addProduct, updateProduct } = useContext(ProductContext);
+  const { products, addProduct, updateProduct, isModalOpen, closeModal, modalProductId } = useContext(ProductContext);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -20,13 +17,22 @@ const AddEditProduct = () => {
 
   // LOGIC: Check if we are in "Edit Mode"
   useEffect(() => {
-    if (id) {
-      const existingProduct = products.find(p => p.id === parseInt(id));
+    if (modalProductId) {
+      const existingProduct = products.find(p => p.id === parseInt(modalProductId));
       if (existingProduct) {
         setFormData(existingProduct);
       }
+    } else {
+      // Reset form when opening to add a new product
+      setFormData({
+        title: '',
+        price: '',
+        category: '',
+        thumbnail: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400',
+        description: ''
+      });
     }
-  }, [id, products]);
+  }, [modalProductId, products, isModalOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,33 +45,42 @@ const AddEditProduct = () => {
 
     // Artificial delay for that "Sleek" processing feel
     setTimeout(() => {
-      if (id) {
-        updateProduct(id, formData);
+      if (modalProductId) {
+        updateProduct(modalProductId, formData);
       } else {
         addProduct(formData);
       }
       setIsSubmitting(false);
-      navigate('/'); // Head back to inventory
+      closeModal(); // Head back to inventory by closing the modal
     }, 1000);
   };
 
-  return (
-    <div className="max-w-2xl mx-auto py-10 animate-in fade-in zoom-in-95 duration-500">
-      {/* Header */}
-      <button 
-        onClick={() => navigate(-1)} 
-        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors mb-6 text-sm font-medium"
-      >
-        <ArrowLeft className="w-4 h-4" /> Back to Inventory
-      </button>
+  if (!isModalOpen) return null;
 
-      <div className="bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/50 overflow-hidden">
-        <div className="bg-slate-900 p-8 text-white flex justify-between items-center">
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fade-in"
+        onClick={closeModal}
+      />
+
+      {/* Modal */}
+      <div className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-900/20 overflow-hidden animate-modal-in">
+        <div className="bg-slate-900 p-8 text-white flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold">{id ? 'Edit Product' : 'New Product'}</h1>
+            <h1 className="text-2xl font-bold">{modalProductId ? 'Edit Product' : 'New Product'}</h1>
             <p className="text-slate-400 text-sm mt-1">Fill in the details to update your catalog.</p>
           </div>
-          <PackagePlus className="w-10 h-10 text-blue-500 opacity-50" />
+          <div className="flex items-center gap-4">
+            <PackagePlus className="w-10 h-10 text-blue-500 opacity-50 hidden sm:block" />
+            <button 
+              onClick={closeModal}
+              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-all"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
@@ -132,7 +147,7 @@ const AddEditProduct = () => {
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                {id ? 'Update Product' : 'Save Product'}
+                {modalProductId ? 'Update Product' : 'Save Product'}
               </>
             )}
           </button>

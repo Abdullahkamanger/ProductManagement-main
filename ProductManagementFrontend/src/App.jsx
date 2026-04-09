@@ -15,9 +15,8 @@ function App() {
           <Routes>
             <Route path="/" element={<ProductList />} />
             <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/add" element={<AddEditProduct />} />
-            <Route path="/edit/:id" element={<AddEditProduct />} />
           </Routes>
+          <AddEditProduct />
         </div>
     
     </ProductProvider>

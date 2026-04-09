@@ -4,7 +4,7 @@ import { Eye, Edit3, Trash2, Box, Star } from 'lucide-react';
 import { ProductContext } from '../Context/ProductContext.jsx';
 
 const ProductCard = ({ product }) => {
-  const { deleteProduct } = useContext(ProductContext);
+  const { deleteProduct, openModal } = useContext(ProductContext);
 
   return (
     <div className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1 transition-all duration-300 flex flex-col">
@@ -45,13 +45,13 @@ const ProductCard = ({ product }) => {
             >
               <Eye className="w-4 h-4" />
             </Link>
-            <Link 
-              to={`/edit/${product.id}`}
+            <button 
+              onClick={() => openModal(product.id)}
               className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
               title="Edit Product"
             >
               <Edit3 className="w-4 h-4" />
-            </Link>
+            </button>
             <button 
               onClick={() => deleteProduct(product.id)}
               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
