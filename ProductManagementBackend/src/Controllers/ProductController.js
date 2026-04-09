@@ -38,5 +38,5 @@ export const deleteProductById = (req,res) => {
         return res.status(404).json({ message: "Product not found" });
     }
     productdata.splice(productIndex, 1);
-    res.json({ message: "Product deleted successfully" }); n 
+    res.json({ message: "Product deleted successfully" }); 
 }
