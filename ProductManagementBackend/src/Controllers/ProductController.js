@@ -13,6 +13,18 @@ export const getProductById = (req,res) => {
     res.json(product);
 }  
 
+export const createProduct = (req,res) => {
+    const {name,price,description} = req.body;
+    const newProduct = {
+        id: productdata.length + 1,
+        name,
+        price,
+        description
+    };
+    productdata.push(newProduct);
+    res.status(201).json(newProduct);
+}
+
 
 
 export const updateProductById = (req,res) => {
