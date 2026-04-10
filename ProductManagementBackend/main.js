@@ -9,11 +9,8 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
-<<<<<<< HEAD
 // ConnectDB();
-=======
 chachu();
->>>>>>> 939b492597dd0d67f3f7490c4de596442f0f920d
 
 app.use(express.json());
 app.use(cors());
