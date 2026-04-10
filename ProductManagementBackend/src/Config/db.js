@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const ConnectDB = async () => {
+const chachu = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
         console.log('Connected to MongoDB');
@@ -10,4 +10,4 @@ const ConnectDB = async () => {
     }
 };
 
-export default ConnectDB;
+export default chachu;
