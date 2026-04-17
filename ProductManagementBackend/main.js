@@ -18,6 +18,10 @@ app.use(cookieParser());
 app.use('/products', ProductRoutes);
 app.use('/users', UserRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+export default app;
+
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}

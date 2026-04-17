@@ -1,12 +1,21 @@
 import mongoose from 'mongoose';
 
+let isConnected = false;
+
 const ConnectDB = async () => {
+    if (isConnected) {
+        console.log('Using existing MongoDB connection');
+        return;
+    }
+
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const db = await mongoose.connect(process.env.MONGODB_URI);
+        isConnected = db.connections[0].readyState;
         console.log(`Connected to MongoDB Atlas`);
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
-        process.exit(1);
+        // In serverless, we might not want to exit the process, 
+        // but since this is a fatal connection error, we'll keep the log.
     }
 };
 
