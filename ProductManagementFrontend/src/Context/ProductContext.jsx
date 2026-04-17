@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const ProductContext = createContext();
 
@@ -26,11 +27,11 @@ export const ProductProvider = ({ children }) => {
         const fetchProducts = async () => {
             try {
 
-                const response = await fetch("https://dummyjson.com/products");
-                const data = await response.json();
+                const response = await axios.get("http://localhost:3000/products");
+                const data = response.data;
+                console.log("Fetched products:", data);
 
-
-                setProducts(data.products);
+                setProducts(data);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -46,23 +47,52 @@ export const ProductProvider = ({ children }) => {
     const filteredProducts = products.filter((product) =>
         product.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    const deleteProduct = (id) => {
+    const deleteProduct = async (id) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
+          try{
+              const res = await axios.delete(`http://localhost:3000/products/${id}`)
 
-            setProducts(prev => prev.filter(p => p.id !== id));
+            if (res.status === 200) {
+                alert("Product deleted successfully!");
+                setProducts(prev => prev.filter(p => p.id !== id));
+            }
+            else { alert("Failed to delete product. Please try again."); }
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            alert("An error occurred while deleting the product.");
+          }
         }
     };
 
-    const addProduct = (newProduct) => {
-        setProducts(prev => {
-            const nextId = prev.length > 0 ? Math.max(...prev.map(p => p.id)) + 1 : 1;
-            const product = { ...newProduct, id: nextId };
-            return [product, ...prev];
-        });
+    const addProduct = async (newProduct) => {
+        try {
+            const res = await axios.post("http://localhost:3000/products", newProduct);
+            setProducts(prev => [...prev, res.data]);
+        } catch (error) {
+            console.error("Error adding product:", error);
+            alert("An error occurred while adding the product.");
+        }
     };
 
-    const updateProduct = (id, updatedData) => {
-        setProducts(prev => prev.map(p => p.id === parseInt(id) ? { ...p, ...updatedData } : p));
+    const updateProduct = async (id, updatedData) => {
+
+try{
+    const res = await axios.put(`http://localhost:3000/products/${id}`, updatedData)
+    if (res.status === 200) {
+        setProducts(prev => prev.map(p => p.id === id ? res.data : p));
+        alert("Product updated successfully!");
+    }
+    else { alert("Failed to update product. Please try again."); }
+}catch (error) {
+    console.error("Error updating product:", error);
+    alert("An error occurred while updating the product.");
+}
+
+      
+       
+
+
+
     };
 
 
