@@ -27,7 +27,7 @@ export const ProductProvider = ({ children }) => {
         const fetchProducts = async () => {
             try {
 
-                const response = await axios.get("http://localhost:3000/products");
+                const response = await axios.get("https://product-management-main-backend.vercel.app/products");
                 const data = response.data;
                 console.log("Fetched products:", data);
 
@@ -52,7 +52,7 @@ export const ProductProvider = ({ children }) => {
     const deleteProduct = async (id) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
           try{
-              const res = await axios.delete(`http://localhost:3000/products/${id}`)
+              const res = await axios.delete(`https://product-management-main-backend.vercel.app/products/${id}`)
 
             if (res.status === 200) {
                 alert("Product deleted successfully!");
@@ -68,7 +68,7 @@ export const ProductProvider = ({ children }) => {
 
     const addProduct = async (newProduct) => {
         try {
-            const res = await axios.post("http://localhost:3000/products", newProduct);
+            const res = await axios.post("https://product-management-main-backend.vercel.app/products", newProduct);
             setProducts(prev => [...prev, res.data]);
         } catch (error) {
             console.error("Error adding product:", error);
@@ -79,7 +79,7 @@ export const ProductProvider = ({ children }) => {
     const updateProduct = async (id, updatedData) => {
 
 try{
-    const res = await axios.put(`http://localhost:3000/products/${id}`, updatedData)
+    const res = await axios.put(`https://product-management-main-backend.vercel.app/products/${id}`, updatedData)
     if (res.status === 200) {
         setProducts(prev => prev.map(p => String(p.id) === String(id) ? res.data : p));
         alert("Product updated successfully!");
