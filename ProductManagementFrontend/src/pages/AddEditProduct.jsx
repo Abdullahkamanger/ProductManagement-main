@@ -18,7 +18,7 @@ const AddEditProduct = () => {
   // LOGIC: Check if we are in "Edit Mode"
   useEffect(() => {
     if (modalProductId) {
-      const existingProduct = products.find(p => p.id === parseInt(modalProductId));
+      const existingProduct = products.find(p => String(p.id) === String(modalProductId));
       if (existingProduct) {
         setFormData(existingProduct);
       }

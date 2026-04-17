@@ -1,60 +1,72 @@
-import productdata from "../data/ProductData.js";
+import Product from "../modals/product.js";
 
-
-export const getProducts = (req, res) => {
-    res.json(productdata);
+// Fetch all products from MongoDB
+export const getProducts = async (req, res) => {
+    try {
+        const products = await Product.find({});
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching products", error: error.message });
+    }
 }
 
-export const getProductById = (req,res) => {
-
-
-
-
-
-    // const id = parseInt(req.params.id);
-    // const product = productdata.find(p => p.id === id);
-    // if (!product) {
-    //     return res.status(404).json({ message: "Product not found" });
-    // }
-    // res.json(product);
+// Fetch a single product by ID
+export const getProductById = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching product", error: error.message });
+    }
 }  
 
-export const createProduct = (req,res) => {
-    const {title, price, description} = req.body;
-    const newProduct = {
-        id: productdata.length + 1,
-        title,
-        price,
-        description
-    };
-    productdata.push(newProduct);
-    res.status(201).json(newProduct);
+// Create a new product
+export const createProduct = async (req, res) => {
+    try {
+        const { title, price, description, category, thumbnail } = req.body;
+        const newProduct = await Product.create({
+            title,
+            price,
+            description,
+            category,
+            thumbnail
+        });
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(400).json({ message: "Error creating product", error: error.message });
+    }
 }
 
-
-
-export const updateProductById = (req,res) => {
-    const id = parseInt(req.params.id);
-    const productIndex = productdata.findIndex(p => p.id === id);
-    if (productIndex === -1) {
-        return res.status(404).json({ message: "Product not found" });
+// Update an existing product
+export const updateProductById = async (req, res) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id, 
+            req.body, 
+            { new: true, runValidators: true }
+        );
+        
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        res.status(400).json({ message: "Error updating product", error: error.message });
     }
-    const updatedProduct = { ...productdata[productIndex], ...req.body };
-
-
-    productdata[productIndex] = updatedProduct;
-
-
-    res.json(updatedProduct);
 }
 
-
-export const deleteProductById = (req,res) => {
-    const id = parseInt(req.params.id);
-    const productIndex = productdata.findIndex(p => p.id === id);
-    if (productIndex === -1) {
-        return res.status(404).json({ message: "Product not found" });
+// Delete a product
+export const deleteProductById = async (req, res) => {
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+        if (!deletedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "Product deleted successfully" }); 
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting product", error: error.message });
     }
-    productdata.splice(productIndex, 1);
-    res.json({ message: "Product deleted successfully" }); 
 }

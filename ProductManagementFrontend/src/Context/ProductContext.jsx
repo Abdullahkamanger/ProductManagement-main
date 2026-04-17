@@ -56,7 +56,7 @@ export const ProductProvider = ({ children }) => {
 
             if (res.status === 200) {
                 alert("Product deleted successfully!");
-                setProducts(prev => prev.filter(p => p.id !== id));
+                setProducts(prev => prev.filter(p => String(p.id) !== String(id)));
             }
             else { alert("Failed to delete product. Please try again."); }
           } catch (error) {
@@ -81,7 +81,7 @@ export const ProductProvider = ({ children }) => {
 try{
     const res = await axios.put(`http://localhost:3000/products/${id}`, updatedData)
     if (res.status === 200) {
-        setProducts(prev => prev.map(p => p.id === id ? res.data : p));
+        setProducts(prev => prev.map(p => String(p.id) === String(id) ? res.data : p));
         alert("Product updated successfully!");
     }
     else { alert("Failed to update product. Please try again."); }
