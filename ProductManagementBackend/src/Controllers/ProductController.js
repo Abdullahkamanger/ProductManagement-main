@@ -20,10 +20,10 @@ export const getProductById = (req,res) => {
 }  
 
 export const createProduct = (req,res) => {
-    const {name,price,description} = req.body;
+    const {title, price, description} = req.body;
     const newProduct = {
         id: productdata.length + 1,
-        name,
+        title,
         price,
         description
     };

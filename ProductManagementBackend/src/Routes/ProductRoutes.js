@@ -6,10 +6,10 @@ const Router = express.Router();
 
 
 Router.get('/',getProducts);
-Router.post('/',isAuthenticated,createProduct);
+Router.post('/',createProduct);
 Router.get('/:id',getProductById);
-Router.put('/:id',isAuthenticated,updateProductById);
-Router.delete('/:id',isAuthenticated,deleteProductById);
+Router.put('/:id',updateProductById);
+Router.delete('/:id',deleteProductById);
 
 
 

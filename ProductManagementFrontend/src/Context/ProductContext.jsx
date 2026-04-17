@@ -44,9 +44,11 @@ export const ProductProvider = ({ children }) => {
     }, []);
 
 
-    const filteredProducts = products.filter((product) =>
-        product.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProducts = products.filter((product) => {
+        const title = product?.title || "";
+        const search = searchTerm || "";
+        return title.toLowerCase().includes(search.toLowerCase());
+    });
     const deleteProduct = async (id) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
           try{
